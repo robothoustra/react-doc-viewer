@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "../../../components/common";
 import { IStyledProps } from "../../..";
@@ -13,6 +13,31 @@ const PDFPagination: FC<{}> = () => {
     dispatch,
   } = useContext(PDFContext);
   const { t } = useTranslation();
+  const [pageValue, setPageValue] = useState(currentPage);
+
+  const handleValidateCurPage = (event: any) => {
+
+    const pageNum = parseInt(event.target.value);
+    console.log("pageNum");
+    console.log(pageNum);
+    if (pageNum > numPages){
+      dispatch(setCurrentPage(numPages));
+    }else if (pageNum < 0){
+      dispatch(setCurrentPage(1));
+    }else{
+      console.log("dispatch : ", pageNum);
+      dispatch(setCurrentPage(pageNum));
+    }
+    
+  }
+
+  useEffect(() => {
+    setPageValue(currentPage);
+  },[currentPage])
+
+  const handleOnChangeCurPage = (event: any) => {
+    setPageValue(event.target.value);
+  }
 
   return (
     <Container id="pdf-pagination">
@@ -25,10 +50,24 @@ const PDFPagination: FC<{}> = () => {
       </PageNavButtonLeft>
 
       <PageTag id="pdf-pagination-info">
-        {t("pdfPluginPageNumber", {
+        {/* {t("pdfPluginPageNumber", {
           currentPage,
           allPagesCount: numPages,
-        })}
+        })} */}
+        {t("pdfPluginPageName")}
+        <input 
+          type="number" 
+          name="inputCurrentPage" 
+          value={pageValue}
+          onChange={handleOnChangeCurPage}
+          onBlur={handleValidateCurPage}
+          onKeyDown={(e) => {e.key === 'Enter' ? handleValidateCurPage(e) : null}}
+          style={{
+            width: '30px'
+          }}
+        />
+        / 
+        {numPages}
       </PageTag>
 
       <PageNavButtonRight
@@ -47,6 +86,17 @@ export default PDFPagination;
 const Container = styled.div`
   display: flex;
   align-items: center;
+  & input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  
+  & input[type=number] {
+    -moz-appearance: textfield;
+  }
+
 `;
 
 const PageNavButtonLeft = styled(Button)`
