@@ -1,6 +1,6 @@
 {
-  "name": "@robothoustra/react-doc-viewer",
-  "version": "1.0.0",
+  "name": "@robothoustra21/react-doc-viewer",
+  "version": "1.0.1",
   "description": "File viewer for React.",
   "author": "Alexis Robert",
   "keywords": [
@@ -25,6 +25,7 @@
   "scripts": {
     "start": "storybook dev -p 6006",
     "build": "rm -rf dist && npm run build:esm && npm run build:cjs",
+    "build:windows" : "rd -r dist && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc --noEmit false",
     "build:cjs": "tsc --noEmit false --module commonjs --outDir ./dist/cjs",
     "test": "react-scripts test --watchAll=false",
